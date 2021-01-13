@@ -1,12 +1,12 @@
 # Deploy-multi-region-high-available-web-application
 Deploying multi-region high available web application in Azure with App Services, SQL Database, and Azure Front Door 
+Blue/Green Deployment with Azure Front Door.
 
 you can get 99.95% high availability for app service, if your app service plan running under standard or premium tier
 
-
-	Configure Azure SQL database
+Configure Azure SQL database
 	
-	1. Setting up geo-replication for your Azure SQL database. This will replicate your databases to databases located in different regions (one or more). Note that the replication process happens asynchronously in the background. Therefore this will not affect to the performance of your application. However, it does take a few seconds to update your database changes to the secondary databases after you commit your transaction to the primary database.
+1. Setting up geo-replication for your Azure SQL database. This will replicate your databases to databases located in different regions (one or more). Note that the replication process happens asynchronously in the background. Therefore this will not affect to the performance of your application. However, it does take a few seconds to update your database changes to the secondary databases after you commit your transaction to the primary database.
 	
   2. Deploy your application into one or more secondary regions and load-balance your HTTP traffics to those regions based on availability. If your application up and running in the primary region, traffic goes to the primary region. If your primary region not available, traffic goes to the secondary regions. You can use the priority routing method for this. There are few azure load balancers which provide priority load balancing options. Azure Traffic Manager, Azure Application Gateway, and Azure Front Door. In addition to the priority routing, these load balancers provide different routing methods such as path-based routing, weighted routing, Performance-based routing…etc. You can use these methods to improve the performance of your application.
 	
@@ -49,6 +49,58 @@ Before you publish the solution, change the AppRegion value of the appsettings.j
 
 Click on the publish button. This will deploy the application to your Azure app service located in the primary region.
 Do the same thing for the secondary region app service as well. Before you publish the application into the secondary region, make sure that you have changed the AppRegion property of the appsettings.json to “Secondary”.
+
+
+Blue/Green Deployment with Azure Front Door
+
+The first step is to configure the frontend
+
+![image](https://user-images.githubusercontent.com/58148717/104476970-6ac1da80-5586-11eb-8d47-b6ca5282b7ce.png)
+
+The main item here as it relates to blue/green is “Session Affinity.” This determines whether the end user always gets routed to the same backend after first accessing the Front Door.Whether or not you enable this depends on your application, and the type of enhancements being rolled out. If it’s a major revision you will likely want to enable Session Affinity, so that if the user is initially routed to the new codebase she will continue to use it. If the enhancement is relatively minor, for example involving a single page with no dependencies on other parts of the application, you could potentially leave this disabled. If in doubt, enable Session Affinity.
+
+Backend Pools
+
+This is where you configure the host(s) that will end up satisfying your users’ web requests.
+In this example, I just chose two relatively-random public endpoints. You would configure your existing backend website and the new one under test. I divided requests between my two on a 75% to 25% split. You would likely send more traffic to the current website than the new one, and then likely direct more to the new one as it proves itself to be bug free.
+
+Here is a screenshot of the definition of one of the two backends. Note the three parameters circled which, with one other, will be discussed in relation to how a configured backend gets chosen by Azure Front Door for a given request.
+
+![image](https://user-images.githubusercontent.com/58148717/104477455-beccbf00-5586-11eb-822a-f02d041b0cb3.png)
+
+The following screenshot shows the two backends I configured as part of my backend pool. 
+Note that the total of the “Weights” does not have to add up to 100 — I did that for clarity.
+
+![image](https://user-images.githubusercontent.com/58148717/104477720-12d7a380-5587-11eb-9ef4-003379edc9f3.png)
+
+For the purposes of a simple Blue/Green configuration, here is a summary on how you might configure these parameters.
+
+Keep the backend under test disabled to start. Once you get all other parameters configured, you can enable it to start your Blue/Green testing.
+
+The Priority of both backends should be the same. I recommend just leaving them at “1.”
+
+As part of the Backend Pool configuration there is a section called “Load Balancing.” For the purposes of our discussion, the most important parameter here is “Latency sensitivity.” This value determines the highest number of milliseconds that a health probe can take for a given backend to be even considered for selection; setting it to zero disables the parameter entirely. I recommend you set it to a reasonably high value such as 500 (a half a second), meaning any backends responding in less than that time frame will be considered. The goal is to make sure both backends get used, as it’s possible they are in different data centers and present different latencies to the end user.
+
+![image](https://user-images.githubusercontent.com/58148717/104478031-6b0ea580-5587-11eb-9e6e-196835be6385.png)
+
+Any backends making it this far are finally selected based on weight.
+
+Routing Rules
+
+For the purposes of Blue/Green, the routing rules are relatively unimportant. What you select here depends more on how your web application works.
+
+For more info: https://docs.microsoft.com/en-us/azure/frontdoor/front-door-route-matching
+
+
+
+
+
+
+
+
+
+
+
 
 
  
