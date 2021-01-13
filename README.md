@@ -91,6 +91,8 @@ For the purposes of Blue/Green, the routing rules are relatively unimportant. Wh
 
 For more info: https://docs.microsoft.com/en-us/azure/frontdoor/front-door-route-matching
 
+https://martinfowler.com/bliki/BlueGreenDeployment.html
+
 
 
 
