@@ -2,6 +2,12 @@
 Deploying multi-region high available web application in Azure with App Services, SQL Database, and Azure Front Door 
 Blue/Green Deployment with Azure Front Door.
 
+What is Azure front door?
+Azure Front Door is a global, scalable entry-point that uses the Microsoft global edge network to create fast, secure, and widely scalable web applications. With Front Door, you can transform your global consumer and enterprise applications into robust, high-performing personalized modern applications with contents that reach a global audience through Azure.
+
+https://azure.microsoft.com/en-us/services/frontdoor/#overview
+
+
 you can get 99.95% high availability for app service, if your app service plan running under standard or premium tier
 
 Configure Azure SQL database
