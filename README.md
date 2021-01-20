@@ -20,6 +20,11 @@ Configure Azure SQL database
   
   ![image](https://user-images.githubusercontent.com/58148717/103944345-1be4f280-50f9-11eb-9701-6690fe1d174e.png)
   
+  Designed by https://www.linkedin.com/in/andrew-th-nguyen/
+  ![image](https://user-images.githubusercontent.com/58148717/105200913-e8956100-5b05-11eb-986b-318429eedf81.png)
+  
+  
+  
 For Azure SQL failover groups we always can chose the paired regions. 
 P.S Azure SQL hyperscale doesn’t support Geo replication so workaround would be that either setup the transactional replication or simply restore the existing database in different region.
 
