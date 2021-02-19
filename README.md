@@ -66,7 +66,7 @@ Blue/Green Deployment with Azure Front Door
 
 The first step is to configure the frontend
 
-![image](https://user-images.githubusercontent.com/58148717/104476970-6ac1da80-5586-11eb-8d47-b6ca5282b7ce.png)
+![image](https://user-images.githubusercontent.com/58148717/108558842-2382e400-72c0-11eb-8a9f-3bc3b18e9184.png)
 
 The main item here as it relates to blue/green is “Session Affinity.” This determines whether the end user always gets routed to the same backend after first accessing the Front Door.Whether or not you enable this depends on your application, and the type of enhancements being rolled out. If it’s a major revision you will likely want to enable Session Affinity, so that if the user is initially routed to the new codebase she will continue to use it. If the enhancement is relatively minor, for example involving a single page with no dependencies on other parts of the application, you could potentially leave this disabled. If in doubt, enable Session Affinity.
 
